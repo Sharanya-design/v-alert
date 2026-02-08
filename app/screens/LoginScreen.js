@@ -1,8 +1,9 @@
 // app/screens/LoginScreen.js
 
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { router } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View, Pressable, Alert } from "react-native";
 import { auth } from "../firebaseConfig";
 
 export default function LoginScreen() {
@@ -15,7 +16,7 @@ export default function LoginScreen() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      alert(`Logged in as ${user.email}`);
+      router.replace("/(tabs)/home");
       setEmail("");
       setPassword("");
       setError("");
@@ -47,9 +48,15 @@ return (
       value={password}
       onChangeText={setPassword}
     />
+<Pressable style={styles.button} onPress={handleLogin}>
+  <Text style={styles.buttonText}>Log In</Text>
+</Pressable>
   </View>
+  
 );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -86,4 +93,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingHorizontal: 10,
   },
+
+
+button: {
+  marginTop: 16,
+  paddingVertical: 12,
+  paddingHorizontal: 20,
+  borderRadius: 10,
+  borderWidth: 1,
+  alignItems: "center",
+},
+
+buttonText: {
+  fontSize: 16,
+  fontWeight: "600",
+},
 });
