@@ -40,11 +40,19 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-  flex: 1,
-  backgroundColor: "#fff",
-  padding: 20,
-  justifyContent: "center",
-}
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 20,
+    justifyContent: "center",
+  },
+
+  title: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: "#111",
+    marginBottom: 14,
+    textAlign: "center",
+  },
 
   card: {
     borderWidth: 1,
@@ -52,6 +60,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
   },
+
   row: {
     paddingVertical: 14,
     paddingHorizontal: 14,
@@ -62,6 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "#fff",
   },
+
   rowText: { fontSize: 16, color: "#333" },
   chev: { fontSize: 22, color: "#999" },
 
@@ -70,6 +80,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: "center",
+    marginTop: 14,
   },
+
   greenBtnText: { color: "#fff", fontWeight: "800" },
 });
