@@ -1,9 +1,9 @@
 // app/screens/LoginScreen.js
 
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Pressable, Alert } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { auth } from "../firebaseConfig";
 
 export default function LoginScreen() {
@@ -50,6 +50,11 @@ return (
     />
 <Pressable style={styles.button} onPress={handleLogin}>
   <Text style={styles.buttonText}>Log In</Text>
+</Pressable>
+<Pressable onPress={() => router.push("/signup")} style={{ marginTop: 12 }}>
+  <Text style={{ color: "#007AFF", fontWeight: "600" }}>
+    Create an account
+  </Text>
 </Pressable>
   </View>
   
