@@ -24,6 +24,9 @@ export default function Home() {
   useEffect(() => {
     const user = auth.currentUser;
 
+console.log("LOGGED IN UID:", user?.uid);
+console.log("LOGGED IN EMAIL:", user?.email);
+
     if (!user) {
       router.replace("/login");
       return;
@@ -38,6 +41,7 @@ export default function Home() {
       (snap) => {
         const list: Kid[] = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
         setKids(list);
+        setError("");
         setLoading(false);
       },
       (err) => {

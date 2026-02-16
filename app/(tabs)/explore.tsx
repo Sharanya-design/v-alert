@@ -1,112 +1,164 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { doc, getDoc } from "firebase/firestore";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { db } from "../firebaseConfig";
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+type Kid = {
+  name?: string;
+  allergies?: string[];
+  severity?: string;
+};
 
-export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
-  );
+export default function Explore() {
+
+  const [loading, setLoading] = useState(true);
+ 
+  const [error, setError] = useState("");
+const [ uidInput, setUidInput] = useState("");
+  const [kid, setKid] = useState<Kid | null>(null);
+
+  async function handleLookup() {
+    const uid = uidInput.trim();
+    if (!uid) {
+      setError("Enter a Band UID");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setKid(null);
+
+    try {
+      // 1) Look up tag doc: tags/{uid}
+      const tagRef = doc(db, "tags", uid);
+      const tagSnap = await getDoc(tagRef);
+
+      if (!tagSnap.exists()) {
+        setError("Band not registered.");
+        return;
+      }
+
+      const tagData = tagSnap.data() as { parentUid?: string; kidId?: string };
+
+      if (!tagData.parentUid || !tagData.kidId) {
+        setError("Tag record missing parentUid or kidId.");
+        return;
+      }
+
+      // 2) Fetch kid doc: users/{parentUid}/kids/{kidId}
+      const kidRef = doc(db, "users", tagData.parentUid, "kids", tagData.kidId);
+      const kidSnap = await getDoc(kidRef);
+
+      if (!kidSnap.exists()) {
+        setError("Kid record not found for this band.");
+        return;
+      }
+
+      setKid(kidSnap.data() as Kid);
+    } catch (e: any) {
+      console.log("Lookup error:", e);
+      setError(e?.message || "Lookup failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Scan Lookup</Text>
+
+      <Text style={styles.subtitle}>
+        (Demo: type the band UID like you scanned it)
+      </Text>
+
+      <TextInput
+        value={uidInput}
+        onChangeText={setUidInput}
+        placeholder="Enter Band UID"
+        autoCapitalize="none"
+        style={styles.input}
+        returnKeyType="search"
+        onSubmitEditing= {handleLookup}
+        autoCorrect= {false}
+
+      />
+
+      <Pressable style={styles.button} onPress={handleLookup} disabled={loading}>
+        <Text style={styles.buttonText}>{loading ? "Looking..." : "Lookup"}</Text>
+      </Pressable>
+
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+
+      {kid ? (
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>{kid.name ?? "Unnamed child"}</Text>
+          <Text style={styles.cardSub}>
+            Allergies: {kid.allergies?.length ? kid.allergies.join(", ") : "None"}
+          </Text>
+          <Text style={styles.cardSub}>Severity: {kid.severity ?? "Unknown"}</Text>
+        </View>
+      ) : null}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
+  container: {
+    flex: 1,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "800",
+    marginTop: 20,
+  },
+  subtitle: {
+    marginTop: 6,
+    marginBottom: 18,
+    fontSize: 14,
+    opacity: 0.7,
+    textAlign: "center",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    padding: 12,
+    width: "100%",
+  },
+  button: {
+    marginTop: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+    alignItems: "center",
+    width: "100%",
+  },
+  buttonText: {
+    fontWeight: "600",
+  },
+  error: {
+    marginTop: 12,
+    color: "red",
+    fontWeight: "600",
+  },
+  card: {
+    marginTop: 18,
+    borderWidth: 1,
+    borderRadius: 14,
+    padding: 16,
+    width: "100%",
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  cardSub: {
+    fontSize: 16,
+    marginTop: 4,
+  },
 });
