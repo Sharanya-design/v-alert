@@ -32,29 +32,35 @@ export default function SignupScreen() {
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        style={styles.input}
-      />
+     <TextInput
+  placeholder="Email"
+  placeholderTextColor="#000000"
+  value={email}
+  onChangeText={setEmail}
+  autoCapitalize="none"
+  style={styles.input}
+/>
 
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
 
-      <TextInput
-        placeholder="Confirm Password"
-        value={confirm}
-        onChangeText={setConfirm}
-        secureTextEntry
-        style={styles.input}
-      />
+    <TextInput
+  placeholder="Password"
+  placeholderTextColor="#000000"
+  value={password}
+  onChangeText={setPassword}
+  secureTextEntry
+  style={styles.input}
+/>
+
+
+    <TextInput
+  placeholder="Confirm Password"
+  placeholderTextColor="#000000"
+  value={confirm}
+  onChangeText={setConfirm}
+  secureTextEntry
+  style={styles.input}
+/>
+
 
       <Pressable style={styles.button} onPress={handleSignup}>
         <Text style={styles.buttonText}>Sign Up</Text>
