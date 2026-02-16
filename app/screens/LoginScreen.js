@@ -1,5 +1,5 @@
 // app/screens/LoginScreen.js
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
@@ -16,7 +16,8 @@ export default function LoginScreen() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      router.replace("/(tabs)/home");
+const accepted = await AsyncStorage.getItem("valert_terms_accepted_v1");
+router.replace(accepted === "true" ? "/(tabs)/home" : "/terms");
       setEmail("");
       setPassword("");
       setError("");
