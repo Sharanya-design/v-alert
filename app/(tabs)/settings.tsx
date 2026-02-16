@@ -39,8 +39,12 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 20 },
-  title: { fontSize: 22, fontWeight: "800", color: "#111", marginBottom: 14 },
+  container: {
+  flex: 1,
+  backgroundColor: "#fff",
+  padding: 20,
+  justifyContent: "center",
+}
 
   card: {
     borderWidth: 1,
