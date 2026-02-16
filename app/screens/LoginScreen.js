@@ -16,6 +16,7 @@ export default function LoginScreen() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+await AsyncStorage.removeItem("valert_terms_accepted_v1"); // TEMP
 const accepted = await AsyncStorage.getItem("valert_terms_accepted_v1");
 router.replace(accepted === "true" ? "/(tabs)/home" : "/terms");
       setEmail("");
