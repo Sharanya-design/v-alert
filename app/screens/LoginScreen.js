@@ -31,7 +31,7 @@ return (
   <View style={styles.container}>
 
   <Image
-    source={require("../../assets/images/image 2.png")}
+    source={require("../../assets/images/logo.png")}
     style={styles.logo}
     resizeMode="contain"
   />
