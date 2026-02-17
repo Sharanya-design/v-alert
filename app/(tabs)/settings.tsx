@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   backgroundColor: "#fff",
   padding: 20,
   justifyContent: "center",
-}
+},
 
   card: {
     borderWidth: 1,
@@ -72,4 +72,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   greenBtnText: { color: "#fff", fontWeight: "800" },
+
+  title: {
+    fontSize: 22,
+    fontWeight:"700",
+    marginBottom:14,
+    color: "#111111"
+  },
 });
