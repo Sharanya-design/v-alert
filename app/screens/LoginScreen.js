@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { auth } from "../firebaseConfig";
 
 export default function LoginScreen() {
@@ -29,7 +29,16 @@ router.replace(accepted === "true" ? "/(tabs)/home" : "/terms");
 
 return (
   <View style={styles.container}>
-    <Text style={styles.title}>V-Alert Login</Text>
+
+  <Image
+    source={require("../../assets/images/logo.png")}
+    style={styles.logo}
+    resizeMode="contain"
+  />
+
+  <Text style={styles.title}>V-Alert Login</Text>
+
+
 
     {error ? <Text style={styles.error}>{String(error)}</Text> : null}
 
@@ -66,13 +75,19 @@ return (
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 20,
-  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 20,
+  },
+
+  logo: {
+    width: 180,
+    height: 120,
+    marginBottom: 20,
+  },
   title: {
     fontSize: 28,
     fontWeight: "bold",
