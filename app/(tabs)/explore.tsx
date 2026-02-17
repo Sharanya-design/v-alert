@@ -71,17 +71,18 @@ const [ uidInput, setUidInput] = useState("");
         (Demo: type the band UID like you scanned it)
       </Text>
 
-      <TextInput
-        value={uidInput}
-        onChangeText={setUidInput}
-        placeholder="Enter Band UID"
-        autoCapitalize="none"
-        style={styles.input}
-        returnKeyType="search"
-        onSubmitEditing= {handleLookup}
-        autoCorrect= {false}
+<TextInput
+  value={uidInput}
+  onChangeText={setUidInput}
+  placeholder="Enter Band UID"
+  placeholderTextColor="#666666"
+  autoCapitalize="none"
+  style={styles.input}
+  returnKeyType="search"
+  onSubmitEditing={handleLookup}
+  autoCorrect={false}
+/>
 
-      />
 
       <Pressable style={styles.button} onPress={handleLookup} disabled={loading}>
         <Text style={styles.buttonText}>{loading ? "Looking..." : "Lookup"}</Text>
@@ -103,62 +104,85 @@ const [ uidInput, setUidInput] = useState("");
 }
 
 const styles = StyleSheet.create({
-  container: {
-  flex:1,
-  padding:20,
-  alignItems: "center",
-  justifyContent: "center",
-},
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    marginTop: 20,
-  },
-  subtitle: {
-    marginTop: 6,
-    marginBottom: 18,
-    fontSize: 14,
-    opacity: 0.7,
-    textAlign: "center",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    padding: 12,
-    width: "100%",
-  },
-  button: {
-    marginTop: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-    borderWidth: 1,
-    alignItems: "center",
-    width: "100%",
-  },
-  buttonText: {
-    fontWeight: "600",
-  },
-  error: {
-    marginTop: 12,
-    color: "red",
-    fontWeight: "600",
-  },
-  card: {
-    marginTop: 18,
-    borderWidth: 1,
-    borderRadius: 14,
-    padding: 16,
-    width: "100%",
-  },
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 8,
-  },
-  cardSub: {
-    fontSize: 16,
-    marginTop: 4,
-  },
+  container: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    marginBottom: 10,
+    color: "#111111",
+    textAlign: "center",
+  },
+
+  subtitle: {
+    fontSize: 14,
+    opacity: 0.7,
+    marginBottom: 20,
+    textAlign: "center",
+    color: "#444444",
+  },
+
+  input: {
+    width: "100%",
+    maxWidth: 360,
+    borderWidth: 1,
+    borderColor: "#cccccc",
+    borderRadius: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    backgroundColor: "#ffffff",
+    color: "#111111",
+    marginBottom: 15,
+  },
+
+  button: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: "#000000",
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  buttonText: {
+    color: "#ffffff",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+
+  error: {
+    marginTop: 12,
+    color: "red",
+    fontWeight: "600",
+  },
+
+  card: {
+    width: "100%",
+    maxWidth: 360,
+    marginTop: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#dddddd",
+    borderRadius: 12,
+    backgroundColor: "#ffffff",
+  },
+
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 6,
+    color: "#111111",
+  },
+
+  cardSub: {
+    fontSize: 14,
+    marginTop: 4,
+    color: "#444444",
+  },
 });
