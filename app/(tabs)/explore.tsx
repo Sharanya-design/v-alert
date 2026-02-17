@@ -1,5 +1,5 @@
-import { doc, getDoc,collection,addDoc,serverTimestamp } from "firebase/firestore";
-import React, { useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { db } from "../firebaseConfig";
 
@@ -11,7 +11,7 @@ type Kid = {
 
 export default function Explore() {
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
  
   const [error, setError] = useState("");
 const [ uidInput, setUidInput] = useState("");
@@ -20,7 +20,6 @@ const [ uidInput, setUidInput] = useState("");
   async function handleLookup() {
     const uid = uidInput.trim();
     if (!uid) {
-        setLoading(false);
       setError("Enter a Band UID");
       return;
     }
@@ -56,18 +55,6 @@ const [ uidInput, setUidInput] = useState("");
       }
 
       setKid(kidSnap.data() as Kid);
-try {
-await addDoc(collection(db, "scanLogs"), {
-  uidScanned: uid, // the band UID you looked up
-  kidName: kidSnap.data()?.name || "Unknown",
-  kidId: tagData.kidId,
-  parentUid: tagData.parentUid,
-  scannedAt: serverTimestamp(),
-});
-} catch (logErr) {
-        console.log ("scan log write failed:", logErr);
-
-}
     } catch (e: any) {
       console.log("Lookup error:", e);
       setError(e?.message || "Lookup failed");
@@ -84,14 +71,17 @@ await addDoc(collection(db, "scanLogs"), {
         (Demo: type the band UID like you scanned it)
       </Text>
 
-<TextInput
-  placeholder="Enter Band UID"
-  placeholderTextColor="#555555"
-  value={uidInput}
-  onChangeText={setUidInput}
-  style={styles.input}
-/>
+      <TextInput
+        value={uidInput}
+        onChangeText={setUidInput}
+        placeholder="Enter Band UID"
+        autoCapitalize="none"
+        style={styles.input}
+        returnKeyType="search"
+        onSubmitEditing= {handleLookup}
+        autoCorrect= {false}
 
+      />
 
       <Pressable style={styles.button} onPress={handleLookup} disabled={loading}>
         <Text style={styles.buttonText}>{loading ? "Looking..." : "Lookup"}</Text>
@@ -113,72 +103,62 @@ await addDoc(collection(db, "scanLogs"), {
 }
 
 const styles = StyleSheet.create({
-  container: {
-  flex: 1,
-  backgroundColor: "#fff",
-  padding: 20,
-  justifyContent: "center",
+  container: {
+  flex:1,
+  padding:20,
   alignItems: "center",
-}
-
-
-  title: {
-    color: "#111111",
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 12,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#cccccc",
-    padding: 12,
-    borderRadius: 10,
-    backgroundColor: "#ffffff",
-    color: "#111111",
-  },
-  error: {
-    color: "red",
-    marginTop: 10,
-  },
-  subtitle: {
-  color: "#444444",
-  fontSize: 14,
-  marginBottom: 12,
+  justifyContent: "center",
 },
-
-button: {
-  marginTop: 12,
-  paddingVertical: 12,
-  borderRadius: 10,
-  alignItems: "center",
-  backgroundColor: "#111111",
-},
-
-buttonText: {
-  color: "#ffffff",
-  fontSize: 16,
-  fontWeight: "600",
-},
-
-card: {
-  marginTop: 16,
-  padding: 14,
-  borderRadius: 12,
-  borderWidth: 1,
-  borderColor: "#dddddd",
-  backgroundColor: "#ffffff",
-},
-
-cardTitle: {
-  fontSize: 18,
-  fontWeight: "700",
-  color: "#111111",
-  marginBottom: 6,
-},
-
-cardSub: {
-  fontSize: 14,
-  color: "#333333",
-  marginTop: 4,
-},
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    marginTop: 20,
+  },
+  subtitle: {
+    marginTop: 6,
+    marginBottom: 18,
+    fontSize: 14,
+    opacity: 0.7,
+    textAlign: "center",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    padding: 12,
+    width: "100%",
+  },
+  button: {
+    marginTop: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+    alignItems: "center",
+    width: "100%",
+  },
+  buttonText: {
+    fontWeight: "600",
+  },
+  error: {
+    marginTop: 12,
+    color: "red",
+    fontWeight: "600",
+  },
+  card: {
+    marginTop: 18,
+    borderWidth: 1,
+    borderRadius: 14,
+    padding: 16,
+    width: "100%",
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  cardSub: {
+    fontSize: 16,
+    marginTop: 4,
+  },
 });
