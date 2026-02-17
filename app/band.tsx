@@ -39,13 +39,12 @@ export default function BandScreen() {
       </Pressable>
 
       {/* Replace the image source with your real band image */}
-      <Image
-        source={{
-          uri: "https://dummyimage.com/800x350/2f6f3a/ffffff&text=V-ALERT+NFC+BAND",
-        }}
-        style={styles.bandImg}
-        resizeMode="contain"
-      />
+     <Image
+  source={require("../assets/images/image.png")}
+  style={styles.bandImg}
+  resizeMode="contain"
+/>
+
 
       <Pressable style={[styles.btn, styles.btnGreen, { marginTop: 18 }]} onPress={() => router.replace("/(tabs)/home")}>
         <Text style={styles.btnTextWhite}>BACK TO HOME</Text>
