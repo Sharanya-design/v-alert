@@ -1,12 +1,32 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+const CART_KEY = "valert_cart_v1";
 
 export default function BandScreen() {
   const [qty, setQty] = useState("");
 
-  const onAddToCart = () => Alert.alert("Cart", "Added to cart!");
-  const onBuyNow = () => Alert.alert("Buy Now", "Checkout coming soon!");
+ const onAddToCart = async () => {
+  const n = parseInt(qty || "0", 10);
+  const safeQty = Number.isFinite(n) && n > 0 ? n : 1;
+
+  const item = { id: "band", name: "V-ALERT NFC BAND", price: 12, qty: safeQty };
+
+  const raw = await AsyncStorage.getItem(CART_KEY);
+  const cart = raw ? JSON.parse(raw) : [];
+
+  // if already in cart, increase qty
+  const idx = cart.findIndex((x: any) => x.id === item.id);
+  if (idx >= 0) cart[idx].qty += item.qty;
+  else cart.push(item);
+
+  await AsyncStorage.setItem(CART_KEY, JSON.stringify(cart));
+
+  router.push("/cart"); // go to cart after adding
+};
+const onBuyNow = () => router.push("/cart");
+
 
   return (
     <ScrollView style={styles.page} contentContainerStyle={styles.container}>
