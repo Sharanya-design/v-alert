@@ -1,8 +1,9 @@
 // app/kid/[kidId].tsx
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { router, useLocalSearchParams } from "expo-router";
 import { deleteDoc, doc, getDoc, onSnapshot, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { auth, db } from "../firebaseConfig";
 
 type Kid = {
@@ -22,6 +23,10 @@ export default function KidDetails() {
   const [error, setError] = useState("");
 const [ uidInput, setUidInput] = useState("");
 const [ saving, setSaving] = useState(false);
+const [scannerOpen, setScannerOpen] = useState(false);
+const [scannedOnce, setScannedOnce] = useState(false);
+const [permission, requestPermission] = useCameraPermissions();
+
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -108,6 +113,27 @@ async function handleRegisterBand() {
     setError("No band linked to unlink.");
     return;
   }
+const openScanner = async () => {
+  if (!permission?.granted) {
+    const res = await requestPermission();
+    if (!res.granted) {
+      Alert.alert("Camera Permission", "Please allow camera access to scan the band.");
+      return;
+    }
+  }
+  setScannedOnce(false);
+  setScannerOpen(true);
+};
+
+const handleBarcodeScanned = ({ data }: { data: string }) => {
+  if (scannedOnce) return;
+  setScannedOnce(true);
+
+  const cleaned = String(data).trim();
+  setUidInput(cleaned);   // VERY IMPORTANT — this connects to your input
+
+  setScannerOpen(false);
+};
 
   setSaving(true);
   setError("");
@@ -127,7 +153,28 @@ async function handleRegisterBand() {
   } finally {
     setSaving(false);
   }
-}
+}const openScanner = async () => {
+  if (!permission?.granted) {
+    const res = await requestPermission();
+    if (!res.granted) {
+      Alert.alert("Camera Permission", "Please allow camera access to scan the band.");
+      return;
+    }
+  }
+  setScannedOnce(false);
+  setScannerOpen(true);
+};
+
+const handleBarcodeScanned = ({ data }: { data: string }) => {
+  if (scannedOnce) return;
+  setScannedOnce(true);
+
+  const cleaned = String(data).trim();
+  setUidInput(cleaned);
+
+  setScannerOpen(false);
+};
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Child Details</Text>
@@ -162,6 +209,12 @@ async function handleRegisterBand() {
     autoCapitalize="none"
     style={styles.input}
   />
+<Pressable
+  style={styles.button}
+  onPress={openScanner}
+>
+  <Text style={styles.buttonText}>Scan QR</Text>
+</Pressable>
 
   <Pressable
     style={styles.button}
@@ -184,7 +237,48 @@ async function handleRegisterBand() {
   </Pressable>
 ) : null}
         </View>
-      )}
+      )}<Modal visible={scannerOpen} animationType="slide">
+  <View style={{ flex: 1 }}>
+    <CameraView
+      style={{ flex: 1 }}
+      barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
+      onBarcodeScanned={handleBarcodeScanned}
+    />
+
+    <View style={{
+      position: "absolute",
+      top: 60,
+      left: 0,
+      right: 0,
+      alignItems: "center"
+    }}>
+      <Text style={{
+        backgroundColor: "rgba(0,0,0,0.6)",
+        color: "white",
+        padding: 10,
+        borderRadius: 10
+      }}>
+        Scan Band QR Code
+      </Text>
+
+      <Pressable
+        onPress={() => setScannerOpen(false)}
+        style={{
+          marginTop: 12,
+          backgroundColor: "rgba(0,0,0,0.6)",
+          paddingVertical: 10,
+          paddingHorizontal: 18,
+          borderRadius: 10
+        }}
+      >
+        <Text style={{ color: "white", fontWeight: "700" }}>
+          Close
+        </Text>
+      </Pressable>
+    </View>
+  </View>
+</Modal>
+
     </View>
   );
 }
