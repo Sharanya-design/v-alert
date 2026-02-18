@@ -165,15 +165,41 @@ const handleBarcodeScanned = ({ data }: { data: string }) => {
   setScannerOpen(true);
 };
 
+const extractUidFromQr = (raw: string) => {
+  const s = String(raw).trim();
+
+  // If QR is a URL like https://.../?uid=ABC123
+  try {
+    const url = new URL(s);
+    const uid =
+      url.searchParams.get("uid") ||
+      url.searchParams.get("tag") ||
+      url.searchParams.get("id") ||
+      url.searchParams.get("code");
+
+    if (uid) return uid.trim();
+  } catch {
+    // not a URL, keep going
+  }
+
+  // If QR is like "UID: ABC123" or "tagUID=ABC123"
+  const m =
+    s.match(/(?:uid|taguid|tag|id|code)\s*[:=]\s*([A-Za-z0-9_-]+)/i) ||
+    s.match(/([A-Za-z0-9_-]{6,})/); // fallback: first “long-ish” token
+
+  return (m?.[1] ?? s).trim();
+};
+
 const handleBarcodeScanned = ({ data }: { data: string }) => {
   if (scannedOnce) return;
   setScannedOnce(true);
 
-  const cleaned = String(data).trim();
-  setUidInput(cleaned);
+  const uid = extractUidFromQr(data);
+  setUidInput(uid);
 
   setScannerOpen(false);
 };
+
 
   return (
     <View style={styles.container}>
