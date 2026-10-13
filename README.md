@@ -1,50 +1,17 @@
-# Welcome to your Expo app 👋
+# V-Alert: NFC-Enabled Allergen Safety Wearable & Companion App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Overview
+V-Alert is an integrated hardware and software solution designed to prevent accidental allergen exposure and childhood anaphylaxis in school environments. The system pairs an NFC-enabled wearable band with a companion mobile app to verify dietary and allergen profiles in real-time.
 
-## Get started
+## Key Features
+- **Real-Time NFC Verification:** Instantly checks meal ingredients against student allergy profiles via NFC-enabled wearable bands.
+- **Companion Mobile App:** Built using React Native and Expo for cross-platform mobile usability.
+- **Cloud Logging & Interface:** Secure database integration for logging dietary safety checks and providing emergency visibility for cafeteria staff.
 
-1. Install dependencies
+## Tech Stack
+- **Mobile Framework:** React Native / Expo
+- **Environment:** VS Code
+- **Hardware/Prototyping:** NFC integration protocols and physical wearable design concepts
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Status
+Currently in the prototype and concept-validation phase, with active community outreach and presentations to county officials for pilot testing frameworks.
